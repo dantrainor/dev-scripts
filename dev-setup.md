@@ -31,11 +31,12 @@ This document describes how to get started with a usable, functional, stable  de
   * [I’ve heard “production api” or “production build” - what’s that?](#qprod)
 
 # Components
+
 dev-scripts
-    * Set of scripts to configure some libvirt VMs and associated virtualbmc processes to enable deploying to them as dummy baremetal nodes
-facet
-    * foo
-    * bar
+- Set of scripts to configure some libvirt VMs and associated virtualbmc processes to enable deploying to them as dummy baremetal nodes
+- facet
+  - foo
+  - bar
 
 
 

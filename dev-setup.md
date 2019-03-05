@@ -34,9 +34,18 @@ This document describes how to get started with a usable, functional, stable  de
 
 dev-scripts
 - Set of scripts to configure some libvirt VMs and associated virtualbmc processes to enable deploying to them as dummy baremetal nodes
+- Launches openshift-installer, creating a (by default) 3-node KNI infrastructure, with a bootstrap node
+- Uses (by default) the libvirt backend
+- Creates a Bootstrap node, responsible for creating an OpenShift cluster
+- Creates an OpenShift cluster comprised of virtual machines, on your dedicated development host
+
 - facet
-  - foo
-  - bar
+  - Provides a UI and RESTful API for our services
+   - Day 1 Provisioning API
+   - Uses an embedded HTTP server to serve Day 1 UI, which will be the primary consumer of this API
+   - Provisioning host configuration validation at startup
+  - Central integration point for doing MetalKube deployments of OpenShift
+  - Facet Architecture
 
 
 

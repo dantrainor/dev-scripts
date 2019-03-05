@@ -152,7 +152,45 @@ Two additional scripts are included as part of dev-scripts.  They will rarely ne
   - Uses an ansible playbook to tear down all the masters and workers
 
 
+# Cleaning up your workspace with dev-scripts
 
+Cleanup is relatively simple by invoking the same ‘make’ process we used for setting up the environment in the first place.
+
+To clean up the entire environment, run:
+```
+$ make clean
+```
+
+# Developing against facet
+Up until this point, we’ve just set up the Host, the Masters, three Workers, and cloned the necessary repositories.  This has not started facet.
+
+Moving forward, the environment variable $GOPATH will be used to reference the Golang library path.  We can use the ‘go’ binary to create some environment variables in addition to $GOPATH:
+```
+$ eval `go env` 
+```
+
+The 03\_ocp\_repo\_sync.sh script we ran previously, automatically cloned the facet repo.  The repo now exists at $GOPATH/src/github.com/metalkube/facet.  This is necessary for the default facet production build, but needs additional work for active development.
+
+To run the production build of facet, use the following command:
+```
+$ go run $GOPATH/src/github.com/metalkube/facet/main.go server
+```
+
+Upon execution, facet can be accessed by the URL printed to the output.
+
+From here, facet development can be expanded by using the documentation, and standard development practices apply moving forward.
+
+
+# Q/A
+
+**Q**: How do I make facet listen on an IP / host other than ‘localhost’?
+**A**: It might be desirable to change the listening address of the Go server.  To do so, edit pkg/server/server.go around like 53, replacing the default ‘localhost’ with a different IP address, or 0.0.0.0 for all IPs.
+
+**Q**: How do I connect to the masters?
+**A**: Connecting to the masters shouldn’t be necessary, but in a pinch, you can access them by ssh core@master-<index>.api.ostest.test.metalkube.org
+
+**Q**: How about connecting to the bootstrap node?
+**A**: This might be more common.  You can access it by ssh core@osetest-bootstrap.api.ostest.test.metalkube.org
 
 
 
@@ -181,51 +219,3 @@ Two additional scripts are included as part of dev-scripts.  They will rarely ne
 
 
 
-
-
-- [Heading](#heading-2)
-  * [Sub-heading](#sub-heading-2)
-    + [Sub-sub-heading](#sub-sub-heading-2)
-
-
-# Heading levels
-
-> This is a fixture to test heading levels
-
-<!-- toc -->
-
-## Heading
-
-This is an h1 heading
-
-### Sub-heading
-
-This is an h2 heading
-
-#### Sub-sub-heading
-
-This is an h3 heading
-
-## Heading
-
-This is an h1 heading
-
-### Sub-heading
-
-This is an h2 heading
-
-#### Sub-sub-heading
-
-This is an h3 heading
-
-## Heading
-
-This is an h1 heading
-
-### Sub-heading
-
-This is an h2 heading
-
-#### Sub-sub-heading
-
-This is an h3 heading

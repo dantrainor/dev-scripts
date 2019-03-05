@@ -199,7 +199,7 @@ From here, facet development can be expanded by using the documentation, and sta
     - Primary interface on the Provision Host (also hosts the ostest-bootstrap VM) and Master nodes
 - brovc
   - Provisioning
-    - Secondary interface on the Provision Host (also hosts the ostest-bootstrap VM) and Master nodes
+    - Secondary interface on the Provision Host (also hosts the ostest-bootstrap VM) and Master nodes  
 To see these bridges and which interfaces are associated with them, run:
 ```
 sudo brctl show

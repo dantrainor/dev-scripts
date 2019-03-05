@@ -125,7 +125,33 @@ $ make
     - Additionally, rebases both openshift-installer and facet repos on to master
     - Checks out a branch called ‘we\_dont\_need\_no\_stinkin\_patches’
     - Additional information under the section “Developing against facet”
-  - Uses yarn to install and build the production facet from source (a static golang binary)
+    - Uses yarn to install and build the production facet from source (a static golang binary)
+- 04_setup_ironic.sh
+  - Builds podman containers for Ironic and Ironic Inspector
+  - Configures Ironic Inspector for pxebooting of virtualized systems
+  - Adds an IP address to the brovc bridge
+  - Massages the Red Hat CoreOS (RHCOS) image along with configuring interfaces inside of it, which nodes will run
+- 05_build_ocp_installer.sh
+  - Builds the OpenShift Installer
+- 06_deploy_bootstrap_vm.sh
+  - Uses openshift-install to create an ignition file, used to create a bootstrap VM.  The OpenShift architecture requries that a bootstrap VM is used to create a set of three OpenShift masters
+  - Creates a guest of an appropriate size on the Host, and configures it appropriately
+  - Attempts to connect to the bootstrap node to ensure that it’s been built and started properly
+- 07_deploy_masters.sh
+  - Uses the OpenStack python-tripleoclient to create baremetal nodes to act as the masters
+  - A config drive is used by the nodes when they come up, which starts the process of installing the masters and ensuring that they can communicate with each other
+
+Two additional scripts are included as part of dev-scripts.  They will rarely need to be invoked directly, but are used by ‘make clean’ to clean up the host system:
+- ocp_cleanup.sh
+  - Removes the bootstrap node along with its volumes, disk images, and associated ignition file
+  - Removes any residual OpenShift configuration data (found in the ocp/ directory)
+  - Removes the dnsmasq configuration created by 02_configure_host.sh
+
+- host-cleanup.sh
+  - Kills the Ironic podman containers running on the host
+  - Uses an ansible playbook to tear down all the masters and workers
+
+
 
 
 

@@ -183,7 +183,7 @@ From here, facet development can be expanded by using the documentation, and sta
 
 # Q/A
 
-Q:  How do I make facet listen on an IP / host other than ‘localhost’?
+Q:  How do I make facet listen on an IP / host other than ‘localhost’?  
 A:  It might be desirable to change the listening address of the Go server.  To do so, edit pkg/server/server.go around like 53, replacing the default ‘localhost’ with a different IP address, or 0.0.0.0 for all IPs.
 
 Q:  How do I connect to the masters?

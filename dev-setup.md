@@ -3,8 +3,8 @@ Setup Development Environment
 
 This document describes how to get started with a usable, functional, stable  development environment to ultimately develop against RHHI.Next.
 
-- [Components](#components)
-  * [dev-scripts](#components-dev-scripts)
+- [Components]
+  * [dev-scripts]
   * [facet](#components-facet)
 - [Environment Prerequisites](#environment-prerequisites)
   * [Host System](#prerequisites-host-setup)

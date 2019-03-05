@@ -41,7 +41,7 @@ dev-scripts
 
 facet
 - Provides a UI and RESTful API for our services
- - Day 1 Provisioning API
+ - - Day 1 Provisioning API
  - Uses an embedded HTTP server to serve Day 1 UI, which will be the primary consumer of this API
  - Provisioning host configuration validation at startup
 - Central integration point for doing MetalKube deployments of OpenShift

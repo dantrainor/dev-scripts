@@ -30,7 +30,7 @@ This document describes how to get started with a usable, functional, stable  de
   * [What about the bridges?](#qbridges)
   * [I’ve heard “production api” or “production build” - what’s that?](#qprod)
 
-## Components
+# Components
 asdasdasdasdasd
 
 

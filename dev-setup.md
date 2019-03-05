@@ -190,7 +190,22 @@ From here, facet development can be expanded by using the documentation, and sta
 **A**:  Connecting to the masters shouldn’t be necessary, but in a pinch, you can access them by ssh core@master-<index>.api.ostest.test.metalkube.org  
 
 **Q**:  How about connecting to the bootstrap node?  
-**A**:  This might be more common.  You can access it by ssh core@osetest-bootstrap.api.ostest.test.metalkube.org
+**A**:  This might be more common.  You can access it by ssh core@osetest-bootstrap.api.ostest.test.metalkube.org  
+
+**Q**:  What about the bridges?  
+**A**:  There are two bridges in use by RHHI.Next:
+- baremetal
+  - Public API access
+    - Primary interface on the Provision Host (also hosts the ostest-bootstrap VM) and Master nodes
+- brovc
+  - Provisioning
+    - Secondary interface on the Provision Host (also hosts the ostest-bootstrap VM) and Master nodes
+To see these bridges and which interfaces are associated with them, run:
+```
+sudo brctl show
+```
+
+
 
 
 

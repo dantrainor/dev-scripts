@@ -50,6 +50,23 @@ facet
 - Central integration point for doing MetalKube deployments of OpenShift
 - Facet Architecture
 
+# Environmental Prerequisites
+
+You will need a dedicated hardware host to be effective with your development tasks.  This is due to the fact that your deployment 
+environment will host several virtual machines using libvirt.  These all get created as part of the execution of dev-scripts.  
+Later versions of this guide may address passthrough virtualization which allows for development in a cloud space.
+
+## Host System
+
+- Hardware host with at least 64G of RAM
+- Dedicated CentOS 7 System
+  - Fully updated
+- Either console access, or ability to reload the system with a tool such as Beaker
+  - Failure is unexpected, but not unheard of, when iterating through development so quickly as RHHI.Next grows.  Having a backup plan is the safest bet
+
+## Additional Configuration
+
+Ensure that the username you are developing with, has passwordless sudo access.  This can be any username.  This example uses the username ‘rhhi’:
 
 
 

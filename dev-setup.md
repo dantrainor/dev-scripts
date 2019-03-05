@@ -205,32 +205,8 @@ To see these bridges and which interfaces are associated with them, run:
 ```
 sudo brctl show
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-[Foo](#foo)
-
-
-
-
-
-
-
-
-
-
-
-
+**Q**:  I’ve heard “production api” or “production build” - what’s that?  
+**A**:  “Production build” or “production API” are the product of compiling all the facet server components in to a static asset in to a go module, using statik.  The final binary then becomes $GOPATH/src/github.com/metalkube/facet/bin/facet.  
 
 
 

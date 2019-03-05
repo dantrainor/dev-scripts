@@ -183,14 +183,14 @@ From here, facet development can be expanded by using the documentation, and sta
 
 # Q/A
 
-Q:  How do I make facet listen on an IP / host other than ‘localhost’?  
-A:  It might be desirable to change the listening address of the Go server.  To do so, edit pkg/server/server.go around like 53, replacing the default ‘localhost’ with a different IP address, or 0.0.0.0 for all IPs.
+**Q**:  How do I make facet listen on an IP / host other than ‘localhost’?  
+**A**:  It might be desirable to change the listening address of the Go server.  To do so, edit pkg/server/server.go around like 53, replacing the default ‘localhost’ with a different IP address, or 0.0.0.0 for all IPs.  
 
-Q:  How do I connect to the masters?
-A:  Connecting to the masters shouldn’t be necessary, but in a pinch, you can access them by ssh core@master-<index>.api.ostest.test.metalkube.org
+**Q**:  How do I connect to the masters?  
+**A**:  Connecting to the masters shouldn’t be necessary, but in a pinch, you can access them by ssh core@master-<index>.api.ostest.test.metalkube.org  
 
-Q:  How about connecting to the bootstrap node?
-A:  This might be more common.  You can access it by ssh core@osetest-bootstrap.api.ostest.test.metalkube.org
+**Q**:  How about connecting to the bootstrap node?  
+**A**:  This might be more common.  You can access it by ssh core@osetest-bootstrap.api.ostest.test.metalkube.org
 
 
 

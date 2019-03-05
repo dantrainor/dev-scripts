@@ -90,12 +90,43 @@ Change in to the dev-scripts directory:
 $ cd dev-scripts
 ```
 
-An OpenShift pull secret is used to pull OpenShift images from the cloud.  To generate a pull secret, visit the Red Hat OKD (OpenShift 4) Cloud site (Red Hat SSO required).   Click on the “Copy Pull Secret” button towards the bottom of the page, to copy the pull secret in to your clipboard.
+An OpenShift pull secret is used to pull OpenShift images from the cloud.  To generate a pull secret, visit the Red Hat OKD (OpenShift 4) Cloud 
+site (Red Hat SSO required).   Click on the “Copy Pull Secret” button towards the bottom of the page, to copy the pull secret in to your clipboard.
 
-The pull secret is stored in an environment file.  An example file exists with the name of config_example.sh.  Copy this file in to one that matches config\_$USER.sh:
+The pull secret is stored in an environment file.  An example file exists with the name of config\_example.sh.  Copy this file in to one that matches config\_$USER.sh:
 ```
 $ cp config_example.sh config_${USER}.sh
 ```
+
+If you wish to use an environment file that specifies the pull secret by any other name, you’ll need to prefix each of your ran 
+commands with CONFIG=<environment file>.sh.  However by default, the build scripts will search for a file named config\_$USER.sh, 
+which will save you some time.
+
+Edit this file, and replace the value of the PULL\_SECRET with that of what’s copied in your clipboard, which should be your individual pull secret.  
+Remember to respect the single quotes already present in the file.
+
+
+# Development Environment Installation with dev-scripts
+
+For more detailed information, consult the dev-scripts git repository.  Jumping right in though, you should expect to be able to set up an almost 
+complete development environment by running the following command:
+```
+$ make
+```
+
+‘make’ looks for a Makefile, inside of which is a canonical list of steps.  These steps execute the following dev-scripts in order:
+- 01\_install\_requirements.sh
+  - Responsible for installing software prerequisites, adding additional repositories as necessary
+  - Yarn, Node.js, golang, Ironic, and the OpenShift Origin Client Tools, and libvirt are all examples of software that gets installed
+- 02\_configure\_host.sh
+  - Mostly responsible for running tripleo-quickstart for the virtualized deployments, configuring libvirt, iptables, creating the baremetal and brovc bridges for system connectivity, and configuring NetworkManager for things such as DNS resolution of internal hostnames
+- 03\_ocp\_repo\_sync.sh
+  - Clones openshift-installer, facet, and statik from github.com
+    - Additionally, rebases both openshift-installer and facet repos on to master
+    - Checks out a branch called ‘we\_dont\_need\_no\_stinkin\_patches’
+    - Additional information under the section “Developing against facet”
+  - Uses yarn to install and build the production facet from source (a static golang binary)
+
 
 
 

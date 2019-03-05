@@ -40,10 +40,10 @@ dev-scripts
 - Creates an OpenShift cluster comprised of virtual machines, on your dedicated development host
 
 - facet
-  - Provides a UI and RESTful API for our services
-   - Day 1 Provisioning API
-   - Uses an embedded HTTP server to serve Day 1 UI, which will be the primary consumer of this API
-   - Provisioning host configuration validation at startup
+  -- Provides a UI and RESTful API for our services
+  -- Day 1 Provisioning API
+  -- Uses an embedded HTTP server to serve Day 1 UI, which will be the primary consumer of this API
+  -- Provisioning host configuration validation at startup
   - Central integration point for doing MetalKube deployments of OpenShift
   - Facet Architecture
 

@@ -73,6 +73,32 @@ Ensure that the username you are developing with, has passwordless sudo access. 
 # chmod 0440 /etc/sudoers.d/rhhi
 ```
 
+## Software Prerequisites
+
+Luckily, dev-scripts handles much of the prerequisite software installation heavy lifting.  
+
+### Clone the dev-scripts repository
+
+As the rhhi user, clone the dev-scripts repository to a location of your choosing:
+
+```
+$ git clone git@github.com:metalkube/dev-scripts.git
+```
+
+Change in to the dev-scripts directory:
+```
+$ cd dev-scripts
+```
+
+An OpenShift pull secret is used to pull OpenShift images from the cloud.  To generate a pull secret, visit the Red Hat OKD (OpenShift 4) Cloud site (Red Hat SSO required).   Click on the “Copy Pull Secret” button towards the bottom of the page, to copy the pull secret in to your clipboard.
+
+The pull secret is stored in an environment file.  An example file exists with the name of config_example.sh.  Copy this file in to one that matches config\_$USER.sh:
+```
+$ cp config_example.sh config_${USER}.sh
+```
+
+
+
 
 
 

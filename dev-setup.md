@@ -43,7 +43,10 @@ facet
 - Provides a UI and RESTful API for our services
   - Day 1 Provisioning API
   - Uses an embedded HTTP server to serve Day 1 UI, which will be the primary consumer of this API
- - Provisioning host configuration validation at startup
+  - Provisioning host configuration validation at startup
+  - Launch the Ironic containers using podman on the provisioning host
+  - Downloads the current images of RHCOS that are needed for a deployment (bootstrap VM, baremetal hosts)
+  - Runs installer, launch bootstrap VM, and drive Ironic APIs
 - Central integration point for doing MetalKube deployments of OpenShift
 - Facet Architecture
 

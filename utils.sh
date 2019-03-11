@@ -18,7 +18,7 @@ target_name="$(basename "$target")"
 current="$target"
 for patch in $(ls "${PWD}/ignition_patches/${kind}/"*.json); do
     current_patch_name="$(basename "$patch")"
-    (>2& echo "Patching "$current" with "$patch"")
+    (>&2 echo "Patching "$current" with "$patch"")
     jsonpatch "$current" "$patch" > "${wd}/${target_name}_${current_patch_name}"
     current="${wd}/${target_name}_${current_patch_name}"
 done
@@ -26,7 +26,7 @@ done
 # Process also generated if they exist
 for patch in $(ls "${PWD}/ignition_patches/generated/${kind}/"*.json); do
     current_patch_name="$(basename "$patch")"
-    (>2& echo "Patching "$current" with "$patch"")
+    (>&2 echo "Patching "$current" with "$patch"")
     jsonpatch "$current" "$patch" > "${wd}/${target_name}_${current_patch_name}"
     current="${wd}/${target_name}_${current_patch_name}"
 done
@@ -45,11 +45,10 @@ function patch_node_ignition() {
     kind="$1"
     bootstrap="$2"
     wd="$(mktemp -d)"
-    ssh_opts=(-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null)
 
     # Wait for the release config to be pulled
     while
-        config=$(ssh "${ssh_opts[@]}" "core@$bootstrap" \
+        config=$($SSH "core@$bootstrap" \
             sudo ls "/etc/mcs/bootstrap/machine-configs/${kind}*")
         [ -z "$config" ]
     do
@@ -58,14 +57,14 @@ function patch_node_ignition() {
     done
 
     # Retrieve the MachineConfig
-    ssh "${ssh_opts[@]}" "core@$bootstrap" \
+    $SSH "core@$bootstrap" \
         sudo cat "$config" > "${wd}/${kind}.yaml"
 
     apply_yaml_patches "$kind" "${wd}/${kind}.yaml"
 
     # Put it back
     # TODO: Put a check so we only do this step if the yaml was successfully generated
-    ssh < "${wd}/${kind}.yaml" "${ssh_opts[@]}" "core@$bootstrap" sudo dd of="$config"
+    $SSH < "${wd}/${kind}.yaml" "core@$bootstrap" sudo dd of="$config"
 }
 
 function machineconfig_generate_patches() {
@@ -145,7 +144,7 @@ function apply_yaml_patches() {
     apply_ignition_patches "$kind" "${wd}/${kind}.json"
 
     # Back to yaml
-    yq -y '.' < "${wd}/${kind}.json" | sudo tee "$target"
+    yq -y '.' < "${wd}/${kind}.json" | sudo tee "$target" | sed -e 's/.*auth.*/***PULL_SECRET***/g'
 }
 
 # Add if-name param to etcd discovery container on masters
@@ -160,10 +159,10 @@ function add_if_name_to_etcd_discovery() {
     wd=$(mktemp -d)
 
     # Find master machine config name
-    while [ -z $(ssh -o StrictHostKeyChecking=no "core@$ip" sudo ls /etc/mcs/bootstrap/machine-configs/master*) ]; do sleep 5; done
+    while [ -z $($SSH "core@$ip" sudo ls /etc/mcs/bootstrap/machine-configs/master*) ]; do sleep 5; done
 
-    master_config=$(ssh -o StrictHostKeyChecking=no "core@$ip" sudo ls /etc/mcs/bootstrap/machine-configs/master*)
-    ssh -o "StrictHostKeyChecking=no" "core@$ip" sudo cat "${master_config}" > "${wd}/master.yaml"
+    master_config=$($SSH "core@$ip" sudo ls /etc/mcs/bootstrap/machine-configs/master*)
+    $SSH "core@$ip" sudo cat "${master_config}" > "${wd}/master.yaml"
     # Extract etcd-member.yaml part
     yq -r ".spec.config.storage.files[] | select(.path==\"/etc/kubernetes/manifests/etcd-member.yaml\") | .contents.source" "${wd}/master.yaml" | sed 's;data:,;;' > "${wd}/etcd-member.urlencode"
     # URL decode
@@ -175,7 +174,23 @@ function add_if_name_to_etcd_discovery() {
     # Replace etcd-member contents in the yaml
     sed -i "s;$(cat ${wd}/etcd-member.urlencode);$(cat ${wd}/etcd-member.urlencode_updated);g" "${wd}/master.yaml"
     # Copy the changed file back to bootstrap
-    cat "${wd}/master.yaml" | ssh -o "StrictHostKeyChecking=no" "core@$ip" sudo dd of="${master_config}"
+    cat "${wd}/master.yaml" | $SSH "core@$ip" sudo dd of="${master_config}"
+}
+
+function create_ignition_configs() {
+    local assets_dir
+
+    assets_dir="$1"
+
+    $GOPATH/src/github.com/metalkube/kni-installer/bin/kni-install --dir "${assets_dir}" --log-level=debug create ignition-configs
+}
+
+function create_cluster() {
+    local assets_dir
+
+    assets_dir="$1"
+
+    $GOPATH/src/github.com/metalkube/kni-installer/bin/kni-install --dir "${assets_dir}" --log-level=debug create cluster
 }
 
 function net_iface_dhcp_ip() {
@@ -200,7 +215,7 @@ function domain_net_ip() {
 
 
     bridge_name=$(sudo virsh net-dumpxml "$net" | "${PWD}/pyxpath" "//bridge/@name" -)
-    hwaddr=$(sudo virsh dumpxml "$domain" | "${PWD}/pyxpath" "//devices/interface[source/@bridge='$bridge_name']/mac/@address" -)
+    hwaddr=$(virsh dumpxml "$domain" | "${PWD}/pyxpath" "//devices/interface[source/@bridge='$bridge_name']/mac/@address" -)
     rc=$?
     if [ $rc -ne 0 ]; then
         return $rc

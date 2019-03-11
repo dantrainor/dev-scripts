@@ -23,16 +23,22 @@ ANSIBLE_FORCE_COLOR=true ansible-playbook \
     -i tripleo-quickstart-config/metalkube-inventory.ini \
     -b -vvv tripleo-quickstart-config/metalkube-setup-playbook.yml
 
-# Allow local non-root-user access to libvirt ref
-# https://github.com/openshift/installer/blob/master/docs/dev/libvirt-howto.md#make-sure-you-have-permissions-for-qemusystem
-if sudo test ! -f /etc/polkit-1/rules.d/80-libvirt.rules ; then
-  cat <<EOF | sudo dd of=/etc/polkit-1/rules.d/80-libvirt.rules
-polkit.addRule(function(action, subject) {
-  if (action.id == "org.libvirt.unix.manage" && subject.local && subject.active && subject.isInGroup("wheel")) {
-      return polkit.Result.YES;
-  }
-});
+# Allow local non-root-user access to libvirt
+sudo usermod -a -G "libvirt" $USER
+
+# As per https://github.com/openshift/installer/blob/master/docs/dev/libvirt-howto.md#configure-default-libvirt-storage-pool
+# Usually virt-manager/virt-install creates this: https://www.redhat.com/archives/libvir-list/2008-August/msg00179.html
+if ! virsh pool-uuid default > /dev/null 2>&1 ; then
+    virsh pool-define /dev/stdin <<EOF
+<pool type='dir'>
+  <name>default</name>
+  <target>
+    <path>/var/lib/libvirt/images</path>
+  </target>
+</pool>
 EOF
+    virsh pool-start default
+    virsh pool-autostart default
 fi
 
 # Allow ipmi to the virtual bmc processes that we just started
@@ -49,6 +55,16 @@ fi
 if [ "$EXT_IF" ]; then
   sudo iptables -t nat -A POSTROUTING --out-interface $EXT_IF -j MASQUERADE
   sudo iptables -A FORWARD --in-interface baremetal -j ACCEPT
+fi
+
+# Add access to backend Facet server from remote locations
+if ! sudo iptables -C INPUT -p tcp --dport 8080 -j ACCEPT ; then
+  sudo iptables -I INPUT -p tcp --dport 8080 -j ACCEPT
+fi
+
+# Add access to Yarn development server from remote locations
+if ! sudo iptables -C INPUT -p tcp --dport 3000 -j ACCEPT ; then
+  sudo iptables -I INPUT -p tcp --dport 3000 -j ACCEPT
 fi
 
 # Need to pass the provision interface for bare metal

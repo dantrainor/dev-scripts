@@ -34,13 +34,13 @@ function sync_go_repo_and_patch {
     popd
 }
 
-sync_go_repo_and_patch github.com/openshift-metalkube/kni-installer https://github.com/openshift-metalkube/kni-installer.git
+sync_go_repo_and_patch github.com/openshift-metal3/kni-installer https://github.com/openshift-metal3/kni-installer.git
 
 # Build facet
 # FIXME(russellb) - disabled due to build failure related to metal3 rename
-#sync_go_repo_and_patch github.com/openshift-metalkube/facet https://github.com/openshift-metalkube/facet.git
+#sync_go_repo_and_patch github.com/openshift-metal3/facet https://github.com/openshift-metal3/facet.git
 #go get -v github.com/rakyll/statik
-#pushd "${GOPATH}/src/github.com/openshift-metalkube/facet"
+#pushd "${GOPATH}/src/github.com/openshift-metal3/facet"
 #yarn install
 #./build.sh
 #popd

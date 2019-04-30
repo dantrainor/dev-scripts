@@ -97,11 +97,11 @@ for PROJ in facet kni-installer ; do
     # Set origin so that sync_go_repo_and_patch is rebasing against the correct source
     cd /home/notstack/$PROJ
     git branch -M master
-    git remote set-url origin https://github.com/openshift-metalkube/$PROJ
+    git remote set-url origin https://github.com/openshift-metal3/$PROJ
     cd -
 
-    mkdir -p $HOME/go/src/github.com/openshift-metalkube
-    mv /home/notstack/$PROJ $HOME/go/src/github.com/openshift-metalkube
+    mkdir -p $HOME/go/src/github.com/openshift-metal3
+    mv /home/notstack/$PROJ $HOME/go/src/github.com/openshift-metal3
 done
 
 # Run dev-scripts
